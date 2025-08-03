@@ -1,0 +1,26 @@
+name: Unzip API on Push
+
+on:
+  push:
+    paths:
+      - 'api-deploy-ready.zip'
+
+jobs:
+  unzip:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Extract ZIP
+        run: |
+          mkdir api
+          unzip api-deploy-ready.zip -d api
+
+      - name: Commit unzipped files
+        run: |
+          git config --global user.name "AutoUnzip Bot"
+          git config --global user.email "action@github.com"
+          git add api/
+          git commit -m "Unzip and deploy API folder"
+          git push
